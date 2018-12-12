@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "dev": "webpack --mode=development --config webpack.config.prod.js",
-    "build": "webpack --mode=production --config webpack.config.prod.js"
+    "build": "node ./src/utils/files/index"
   },
   "keywords": [],
   "author": "zdluoa",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "d3": "^5.7.0",
     "echarts": "^4.2.0-rc.2",
+    "highcharts": "^7.0.0",
     "jquery": "^3.3.1",
     "three": "^0.84.0"
   },

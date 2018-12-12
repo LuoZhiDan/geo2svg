@@ -11,7 +11,7 @@ module.exports = {
     devServer: {
         contentBase: './dist',
         hot: true,
-        open: false
+        open: true
     },
     module: {
         rules:[{

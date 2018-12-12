@@ -1,39 +1,29 @@
+
+
+import gs from './utils/mapData/rawData/geoJson/chong_qing_geo.json';
+
 var width = 1024;
 var height = 1024;
 var padding = 10;
-var g = d3.select('svg')
-    .attr('width', width)
-    .attr('height', height)
-    .attr('xmlns', 'http://www.w3.org/2000/svg')
-    .attr('viewBox', '0 0 ' + width + ' ' + height + '')
-    .append('g');
 var root;
 var projection, path;
-echarts.util.mapData.params.params['china'].getGeoJson(function (data) {
-    root = data;
-    //设置投影 
-    projection = d3.geoMercator()
-    projection.fitExtent([[padding, padding], [width - padding * 2, height - padding * 2]], root);
 
-    //生成地理路径
-    path = d3.geoPath(projection);
-    update();
-});
+projection = d3.geoMercator()
+projection.fitExtent([[padding, padding], [width - padding * 2, height - padding * 2]], gs);
+path = d3.geoPath(projection);
 
-// d3.json('./geojson/50003.json').then(function( data ){
-//     root = data;
-//     //设置投影 
-//     projection = d3.geoMercator()
-//     projection.fitExtent([[padding, padding], [width - padding * 2, height - padding * 2]], root);
-
-//     //生成地理路径
-//     path = d3.geoPath( projection );
-//     update();
-// });
+update();
 
 function update() {
+    var g = d3.select('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('xmlns', 'http://www.w3.org/2000/svg')
+        .attr('viewBox', '0 0 ' + width + ' ' + height + '')
+        .append('g');
+
     g.selectAll("text")
-        .data(root.features)
+        .data(gs.features)
         .enter()
         .append("text")
         .attr("text-anchor", "middle")
@@ -48,7 +38,7 @@ function update() {
         });
 
     g.selectAll("path")
-        .data(root.features)
+        .data(gs.features)
         .enter()
         .append("path")
         .attr("stroke", "#00ffff")
