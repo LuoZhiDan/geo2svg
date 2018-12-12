@@ -2,15 +2,12 @@
 
 import gs from './utils/mapData/rawData/geoJson/chong_qing_geo.json';
 
+import toData from 'gs-utils-zdluoa/src/utils/toData';
+
+var data = toData(gs);
+
 var width = 1024;
 var height = 1024;
-var padding = 10;
-var root;
-var projection, path;
-
-projection = d3.geoMercator()
-projection.fitExtent([[padding, padding], [width - padding * 2, height - padding * 2]], gs);
-path = d3.geoPath(projection);
 
 update();
 
@@ -23,7 +20,7 @@ function update() {
         .append('g');
 
     g.selectAll("text")
-        .data(gs.features)
+        .data(data.features)
         .enter()
         .append("text")
         .attr("text-anchor", "middle")
@@ -31,28 +28,30 @@ function update() {
         .attr("fill", "#000")
         .style("font-size", "12px")
         .text(function (d) {
-            return d.properties.name;
+            return d.name;
         })
         .attr("transform", function (d) {
-            return "translate(" + projection(d.properties.cp).join(',') + ")";
+            return "translate(" + d.center.join(',') + ")";
         });
 
     g.selectAll("path")
-        .data(gs.features)
+        .data(data.features)
         .enter()
         .append("path")
         .attr("stroke", "#00ffff")
         .attr("stroke-width", 1)
         .attr('data-name', function (d) {
-            return d.properties.name;
+            return d.name;
         })
         .attr('center', function (d) {
-            return projection(d.properties.cp);
+            return d.center;
         })
         .attr("fill", function (d, i) {
             return 'rgba(0,0,0,0)';
         })
-        .attr("d", path)   //使用地理路径生成器
+        .attr("d", function(d){
+            return d.path;
+        }) 
         .on("mouseover", function (d, i) {
             d3.select(this)
                 .attr("fill", "green");
@@ -62,15 +61,5 @@ function update() {
                 .attr("fill", 'rgba(0,0,0,0)');
         });
 
-    var nodes = d3.selectAll('path').nodes();
-    var result = [];
-    nodes.forEach(function (node, i) {
-        result.push({
-            _id: '_path_' + i,
-            name: node.getAttribute('data-name'),
-            center: JSON.parse('[' + node.getAttribute('center') + ']'),
-            path: node.getAttribute('d')
-        });
-    });
-    console.log(JSON.stringify(result));
+    console.log( JSON.stringify( data ) );
 }
